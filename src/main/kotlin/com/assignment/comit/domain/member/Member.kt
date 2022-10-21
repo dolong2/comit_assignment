@@ -1,10 +1,12 @@
 package com.assignment.comit.domain.member
 
 import com.assignment.comit.domain.posting.Posting
+import org.hibernate.validator.constraints.UniqueElements
 import javax.persistence.*
 
 @Entity
 class Member(
+    @UniqueElements
     val email: String,
     val name: String,
     val password:String,
@@ -15,6 +17,11 @@ class Member(
 ){
     @Id @GeneratedValue
     val id: Long = 0
+    var refreshToken: String = ""
     @OneToMany(cascade = [CascadeType.REMOVE], mappedBy = "owner")
     val postings: List<Posting> = mutableListOf()
+
+    fun updateRefreshToken(refreshToken: String){
+        this.refreshToken = refreshToken
+    }
 }
