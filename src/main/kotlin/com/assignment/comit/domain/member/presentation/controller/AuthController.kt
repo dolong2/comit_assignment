@@ -6,10 +6,8 @@ import com.assignment.comit.domain.member.presentation.dto.response.RefreshResDt
 import com.assignment.comit.domain.member.presentation.dto.response.SigninResDto
 import com.assignment.comit.domain.member.service.MemberService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/v1/auth")
@@ -18,13 +16,14 @@ class AuthController(
 ){
 
     @PostMapping("/signup")
-    fun signup(signupReqDto: SignupReqDto): ResponseEntity<Void> {
+    fun signup(@Valid @RequestBody signupReqDto: SignupReqDto): ResponseEntity<Void> {
+        println("signupReqDto.email = ${signupReqDto.email}")
         memberService.join(signupReqDto)
         return ResponseEntity.noContent().build()
     }
 
     @PostMapping("/signin")
-    fun signin(signinReqDto: SigninReqDto): ResponseEntity<SigninResDto>{
+    fun signin(@Valid @RequestBody signinReqDto: SigninReqDto): ResponseEntity<SigninResDto>{
         return ResponseEntity.ok(memberService.login(signinReqDto))
     }
 
