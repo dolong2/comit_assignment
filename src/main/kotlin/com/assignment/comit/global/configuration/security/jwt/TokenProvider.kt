@@ -55,7 +55,7 @@ class TokenProvider {
         }
     }
 
-    fun generateAccessToken(email: String, roles: List<Role>, tokenType: String): String{
+    fun generateAccessToken(email: String, roles: List<Role>): String{
         val claims = Jwts.claims()
         claims.put(TokenClaimName.ROLE.value, roles)
         claims.put(TokenClaimName.TOKEN_TYPE.value, TokenType.ACCESS_TOKEN.value)
