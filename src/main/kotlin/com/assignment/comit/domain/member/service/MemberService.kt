@@ -10,6 +10,7 @@ import com.assignment.comit.global.exception.collection.*
 import com.assignment.comit.global.util.CurrentMemberUtil
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class MemberService(
@@ -19,6 +20,7 @@ class MemberService(
     private val currentMemberUtil: CurrentMemberUtil,
 ){
 
+    @Transactional(rollbackFor = [Exception::class])
     fun join(signupReqDto: SignupReqDto): Long{
         if(memberRepository.existsByEmail(signupReqDto.email))
             throw MemberAlreadyExistsException()
@@ -27,6 +29,7 @@ class MemberService(
         return memberRepository.save(member).id
     }
 
+    @Transactional(rollbackFor = [Exception::class])
     fun login(signinReqDto: SigninReqDto): SigninResDto {
         if(!memberRepository.existsByEmail(signinReqDto.email))
             throw MemberNotExistException()
@@ -43,11 +46,13 @@ class MemberService(
         )
     }
 
+    @Transactional(rollbackFor = [Exception::class])
     fun logout(){
         val member = currentMemberUtil.getCurrentMember()
         member.updateRefreshToken("")
     }
 
+    @Transactional(rollbackFor = [Exception::class])
     fun refresh(refreshToken: String): RefreshResDto {
         if(tokenProvider.isTokenExpired(refreshToken))
             throw RefreshTokenExpiredException()
