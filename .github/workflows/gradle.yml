@@ -64,4 +64,4 @@ jobs:
         aws s3 cp \
         --region ap-northeast-2 \
         --acl private \ 
-        ./commit-build.zip s3://commit-code-deploy/
+    ./commit-build.zip s3://commit-code-deploy/
