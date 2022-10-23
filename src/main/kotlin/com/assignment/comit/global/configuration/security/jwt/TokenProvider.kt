@@ -59,21 +59,21 @@ class TokenProvider {
         val claims = Jwts.claims()
         claims.put(TokenClaimName.ROLE.value, roles)
         claims.put(TokenClaimName.TOKEN_TYPE.value, TokenType.ACCESS_TOKEN.value)
-        return createToken(claims, email)
+        return createToken(claims, email, ACCESS_TOKEN_EXPIRE_TIME)
     }
 
     fun generateRefreshToken(email: String): String{
         val claims = Jwts.claims()
         claims.put(TokenClaimName.TOKEN_TYPE.value, TokenType.REFRESH_TOKEN.value)
-        return createToken(claims, email)
+        return createToken(claims, email, REFRESH_TOKEN_EXPIRE_TIME)
     }
 
-    private fun createToken(claims: Claims, email: String): String {
+    private fun createToken(claims: Claims, email: String, expression: Long): String {
         claims.put(TokenClaimName.EMAIL.value, email)
         return Jwts.builder()
             .addClaims(claims)
             .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis()))
+            .setExpiration(Date(System.currentTimeMillis() + expression))
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact()
     }

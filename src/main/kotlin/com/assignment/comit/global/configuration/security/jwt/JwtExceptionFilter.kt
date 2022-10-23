@@ -1,6 +1,7 @@
 package com.assignment.comit.global.configuration.security.jwt
 
 import com.assignment.comit.global.exception.collection.AccessTokenExpiredException
+import com.assignment.comit.global.exception.collection.BaseException
 import com.assignment.comit.global.exception.collection.TokenNotValidException
 import com.assignment.comit.global.util.ErrorResponseWriter
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -28,11 +29,9 @@ class JwtExceptionFilter(
     ) {
         try {
             filterChain.doFilter(request, response)
-        } catch (e: AccessTokenExpiredException) {
+        } catch (e: BaseException) {
             errorResponseWriter.writeErrorResponse(request, response, e)
-        } catch(e: TokenNotValidException){
-            errorResponseWriter.writeErrorResponse(request, response, e)
-        } catch (e: Exception) {
+        }catch (e: Exception) {
             errorResponseWriter.writeErrorResponse(request, response, e)
         }
     }

@@ -38,6 +38,7 @@ class ErrorResponseWriter(
         val json = convertJson(e)
         response.status = e.errorCode.code
         response.contentType = "Application/json"
+        response.characterEncoding = "UTF-8"
         response.writer.write(json)
     }
 
@@ -46,6 +47,7 @@ class ErrorResponseWriter(
         val json = convertJson(e)
         response.status = HttpStatus.INTERNAL_SERVER_ERROR.value()
         response.contentType = "Application/json"
+        response.characterEncoding = "UTF-8"
         response.writer.write(json)
     }
 
@@ -54,6 +56,14 @@ class ErrorResponseWriter(
         val map: MutableMap<String, Any?> = HashMap()
         map["msg"] = e.message
         map["code"] = HttpStatus.INTERNAL_SERVER_ERROR.value()
+        return objectMapper.writeValueAsString(map)
+    }
+
+    @Throws(JsonProcessingException::class)
+    private fun convertJson(e: BaseException): String {
+        val map: MutableMap<String, Any?> = HashMap()
+        map["msg"] = e.errorCode.msg
+        map["code"] = e.errorCode.code
         return objectMapper.writeValueAsString(map)
     }
 }
