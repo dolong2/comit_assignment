@@ -17,7 +17,6 @@ class AuthController(
 
     @PostMapping("/signup")
     fun signup(@Valid @RequestBody signupReqDto: SignupReqDto): ResponseEntity<Void> {
-        println("signupReqDto.email = ${signupReqDto.email}")
         memberService.join(signupReqDto)
         return ResponseEntity.noContent().build()
     }
