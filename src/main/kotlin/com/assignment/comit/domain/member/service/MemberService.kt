@@ -29,7 +29,7 @@ class MemberService(
         return memberRepository.save(member).id
     }
 
-    @Transactional(rollbackFor = [Exception::class])
+    @Transactional(rollbackFor = [Exception::class], readOnly = true)
     fun login(signinReqDto: SigninReqDto): SigninResDto {
         if(!memberRepository.existsByEmail(signinReqDto.email))
             throw MemberNotExistException()
