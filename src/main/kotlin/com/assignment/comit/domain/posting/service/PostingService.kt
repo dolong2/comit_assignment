@@ -2,6 +2,8 @@ package com.assignment.comit.domain.posting.service
 
 import com.assignment.comit.domain.member.Role
 import com.assignment.comit.domain.posting.presentation.dto.req.PostingReqDto
+import com.assignment.comit.domain.posting.presentation.dto.res.PostingListResDto
+import com.assignment.comit.domain.posting.presentation.dto.res.PostingResDto
 import com.assignment.comit.domain.posting.repository.PostingRepository
 import com.assignment.comit.global.exception.collection.MemberNotSameException
 import com.assignment.comit.global.exception.collection.PostingNotExistsException
@@ -28,5 +30,29 @@ class PostingService(
         if(posting.owner == member || member.roles.contains(Role.ROLE_ADMIN))
             throw MemberNotSameException()
         postingRepository.delete(posting)
+    }
+
+    @Transactional(rollbackFor = [Exception::class], readOnly = true)
+    fun getAllPosting(): PostingListResDto{
+        return PostingListResDto(
+            postingRepository.findAll()
+                .map { PostingResDto(it) }
+        )
+    }
+
+    @Transactional(rollbackFor = [Exception::class], readOnly = true)
+    fun getMyAllPosting(): PostingListResDto{
+        return PostingListResDto(
+            postingRepository.findAll()
+                .filter { it.owner == currentMemberUtil.getCurrentMember() }
+                .map { PostingResDto(it) }
+        )
+    }
+
+    @Transactional(rollbackFor = [Exception::class], readOnly = true)
+    fun getOnePosting(id: Long): PostingResDto{
+        val posting = postingRepository.findById(id)
+            .orElseThrow { PostingNotExistsException() }
+        return PostingResDto(posting)
     }
 }
