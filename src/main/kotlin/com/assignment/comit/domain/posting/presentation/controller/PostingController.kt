@@ -28,7 +28,7 @@ class PostingController(
     @DeleteMapping("/{id}")
     fun deletePosting(@PathVariable id: Long): ResponseEntity<Void>{
         postingService.deletePosting(id)
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.ok().build()
     }
 
     @GetMapping

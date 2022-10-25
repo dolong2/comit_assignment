@@ -40,7 +40,6 @@ class MemberService(
         val refreshToken = tokenProvider.generateRefreshToken(member.email)
         member.updateRefreshToken(refreshToken)
         return SigninResDto(
-            email = member.email,
             accessToken = accessToken,
             refreshToken = refreshToken,
         )
@@ -62,7 +61,6 @@ class MemberService(
         val accessToken = tokenProvider.generateAccessToken(member.email, member.roles)
         val refreshToken = tokenProvider.generateRefreshToken(member.email)
         return RefreshResDto(
-            email = member.email,
             accessToken = accessToken,
             refreshToken = refreshToken
         )

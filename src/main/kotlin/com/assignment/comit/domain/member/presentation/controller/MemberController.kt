@@ -14,6 +14,6 @@ class MemberController(
     @PostMapping("/logout")
     fun logout(): ResponseEntity<Void>{
         memberService.logout()
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.ok().build()
     }
 }
