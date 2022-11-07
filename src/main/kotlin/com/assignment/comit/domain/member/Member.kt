@@ -18,6 +18,7 @@ class Member(
     @Id @GeneratedValue
     val id: Long = 0
     var refreshToken: String = ""
+        private set
     @OneToMany(cascade = [CascadeType.REMOVE], mappedBy = "owner")
     val postings: List<Posting> = mutableListOf()
 

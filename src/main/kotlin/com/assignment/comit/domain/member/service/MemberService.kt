@@ -31,9 +31,8 @@ class MemberService(
 
     @Transactional(rollbackFor = [Exception::class], readOnly = true)
     fun login(signinReqDto: SigninReqDto): SigninResDto {
-        if(!memberRepository.existsByEmail(signinReqDto.email))
-            throw MemberNotExistException()
-        val member = memberRepository.findByEmail(signinReqDto.email)!!
+        val member = memberRepository.findByEmail(signinReqDto.email)
+            ?:throw MemberNotExistException()
         if(passwordEncoder.matches(signinReqDto.password, member.password))
             throw PasswordNotCorrectException()
         val accessToken = tokenProvider.generateAccessToken(member.email, member.roles)
