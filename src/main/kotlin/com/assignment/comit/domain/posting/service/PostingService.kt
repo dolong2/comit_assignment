@@ -1,6 +1,7 @@
 package com.assignment.comit.domain.posting.service
 
 import com.assignment.comit.domain.member.Role
+import com.assignment.comit.domain.posting.facade.PostingFacade
 import com.assignment.comit.domain.posting.presentation.dto.req.PostingReqDto
 import com.assignment.comit.domain.posting.presentation.dto.res.PostingListResDto
 import com.assignment.comit.domain.posting.presentation.dto.res.PostingResDto
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 class PostingService(
     private val postingRepository: PostingRepository,
     private val currentMemberUtil: CurrentMemberUtil,
+    private val postingFacade: PostingFacade,
 ){
     @Transactional(rollbackFor = [Exception::class])
     fun writePosting(postingReqDto: PostingReqDto){
@@ -24,8 +26,7 @@ class PostingService(
 
     @Transactional(rollbackFor = [Exception::class])
     fun deletePosting(id: Long){
-        val posting = postingRepository.findById(id)
-            .orElseThrow { PostingNotExistsException() }
+        val posting = postingFacade.getOnePosting(id)
         val member = currentMemberUtil.getCurrentMember()
         if(posting.owner == member || member.roles.contains(Role.ROLE_ADMIN))
             throw MemberNotSameException()
@@ -51,8 +52,7 @@ class PostingService(
 
     @Transactional(rollbackFor = [Exception::class], readOnly = true)
     fun getOnePosting(id: Long): PostingResDto{
-        val posting = postingRepository.findById(id)
-            .orElseThrow { PostingNotExistsException() }
+        val posting = postingFacade.getOnePosting(id)
         return PostingResDto(posting)
     }
 }
